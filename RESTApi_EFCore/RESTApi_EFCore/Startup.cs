@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,23 @@ namespace RESTApi_EFCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "PING Api",
+                    Description = "ASP.NET Core Rest API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Maxime Lebel",
+                        Email = "maximeflebel@gmail.com",
+                        Url = new Uri("https://twitter.com/fmasaree"),
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +55,17 @@ namespace RESTApi_EFCore
             }
 
             app.UseHttpsRedirection();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
+            // https://localhost:44380/
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Première version API");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
