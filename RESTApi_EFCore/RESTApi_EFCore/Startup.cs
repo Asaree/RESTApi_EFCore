@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RESTApi_EFCore.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,7 @@ namespace RESTApi_EFCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<AppDBContext>(o => o.UseSqlite(Configuration.GetConnectionString("SQLite")));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -34,8 +37,8 @@ namespace RESTApi_EFCore
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "PING Api",
-                    Description = "ASP.NET Core Rest API",
+                    Title = "Quiz Api",
+                    Description = "ASP.NET Core Rest API for Quiz",
                     Contact = new OpenApiContact
                     {
                         Name = "Maxime Lebel",
@@ -44,6 +47,7 @@ namespace RESTApi_EFCore
                     }
                 });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +62,8 @@ namespace RESTApi_EFCore
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
+            //app.MapGet("/get-all-questions", async () => await QuestionsRepository.GetQuestionsAsync());
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
             // https://localhost:44380/

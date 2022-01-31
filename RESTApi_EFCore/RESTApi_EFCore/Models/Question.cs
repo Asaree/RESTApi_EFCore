@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RESTApi_EFCore.Models
 {
-    internal sealed class Question
+    public sealed class Question
     {
         [Key]
         public int QuestionId { get; set; }

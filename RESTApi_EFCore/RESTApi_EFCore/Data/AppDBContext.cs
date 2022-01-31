@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace RESTApi_EFCore.Data
 {
-    internal sealed class AppDBContext : DbContext
+    public sealed class AppDBContext : DbContext
     {
         public DbSet<Question> Questions { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder) => dbContextOptionsBuilder.UseSqlite("Data Source= ./Data/AppDB.db");
     
+        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Création d'une base exemple
             Question[] questionsExamples = new Question[5];
 
             for (int i = 1; i < 6; i++)
@@ -27,6 +27,7 @@ namespace RESTApi_EFCore.Data
             }
 
             modelBuilder.Entity<Question>().HasData(questionsExamples);
+            base.OnModelCreating(modelBuilder);
         }
     }
     
